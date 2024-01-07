@@ -1,0 +1,30 @@
+server {
+	listen 80 default_server;
+	listen [::]:80 default_server;
+	
+	root /var/www/html;
+	index index.php;
+
+	server_name maverick.bbq;
+
+	location / {
+		try_files $uri $uri/ @extensionless-php =404;
+	}
+
+	location ~ \.php$ {
+		include snippets/fastcgi-php.conf;
+		fastcgi_pass unix:/run/php/php7.4-fpm.sock;
+		fastcgi_param FQDN true;
+	}
+
+	location @extensionless-php {
+		rewrite ^(.*)$ $1.php last;
+	}
+
+	# deny access to .htaccess files, if Apache's document root
+	# concurs with nginx's one
+	#
+	location ~ /\.ht {
+		deny all;
+	}
+}

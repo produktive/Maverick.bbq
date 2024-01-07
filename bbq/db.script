@@ -1,0 +1,9 @@
+CREATE TABLE readings (cookid INT,time TEXT,probe1 INT,probe2 INT,probe3 INT,probe4 INT);
+CREATE TABLE activecook (cookid INT);
+CREATE TABLE smokers (id INTEGER PRIMARY KEY AUTOINCREMENT,desc TEXT,archived INT);
+CREATE TABLE cooks (id INTEGER PRIMARY KEY AUTOINCREMENT,start TEXT,end TEXT,smoker INT,pitLow INT,pitHi INT,foodLow INT,foodHi INT,note TEXT);
+CREATE TABLE settings (alerts TEXT,pitLow INT,pitHigh INT,foodLow INT,foodHigh INT,email TEXT,pitLineColor TEXT,foodLineColor TEXT,alertLimit INT,pushToken TEXT,push TEXT,emailEnabled TEXT,pushUser TEXT,pushDevice TEXT,pushSub TEXT, emailTo TEXT, smtp TEXT);
+CREATE TABLE alerts (cookid INT,time TEXT,type TEXT,message TEXT,read INT);
+INSERT INTO activecook (cookid) VALUES (-1);
+INSERT INTO settings (alerts,pitLow,pitHigh,foodLow,foodHigh,email,pitLineColor,foodLineColor,alertLimit,pushToken,push,emailEnabled,pushUser,pushDevice,pushSub, emailTo,smtp) VALUES ('off',0,0,0,0,'','#291A5B','#008789',1,'','','off','','','','','');
+PRAGMA journal_mode=WAL;
