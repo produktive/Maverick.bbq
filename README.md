@@ -57,6 +57,7 @@ Install steps as of January 7, 2024:
 11.  Set ownership/permissions on /var/www/html and /var/www/bbq directory and contents  
     a. sudo chown -R $USER:www-data /var/www/bbq
     b. sudo chown -R $USER:www-data /var/www/html
+12. Enter IP/hostname of your Raspberry Pi in a web browser. Login with default password `password` and change it after login.
 
 ## Notes
 Only Gmail has been tested with the email alerts since I don't have accounts with the other providers. If you use a different provider and it doesn't work, create a pull request and I will investigate it.
