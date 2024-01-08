@@ -30,8 +30,8 @@ GPIO Pinout (physical pin numbers):
 
 Install steps as of January 7, 2024:
 
-1.  sudo apt-get install git (may have to sudo apt-get updated again first)
-2.  git clone [https://github.com/eightywon/maverick](https://github.com/eightywon/maverick)
+1.  `sudo apt install git`
+2.  `git clone [https://github.com/produktive/Maverick.bbq](https://github.com/produktive/Maverick.bbq)`
 3.  Install PIGPIO (see [http://abyz.me.uk/rpi/pigpio/download.html](http://abyz.me.uk/rpi/pigpio/download.html))  
     c. `wget abyz.me.uk/rpi/pigpio/pigpio.zip`
     d. `unzip pigpio.zip`  
