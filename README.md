@@ -33,7 +33,7 @@ Install steps as of January 7, 2024:
 1.  `sudo apt install git`
 2.  `git clone [https://github.com/produktive/Maverick.bbq](https://github.com/produktive/Maverick.bbq)`
 3.  Install PIGPIO (see [http://abyz.me.uk/rpi/pigpio/download.html](http://abyz.me.uk/rpi/pigpio/download.html))  
-    c. `wget abyz.me.uk/rpi/pigpio/pigpio.zip`
+    c. `wget abyz.me.uk/rpi/pigpio/pigpio.zip`  
     d. `unzip pigpio.zip`  
     e. `cd PIGPIO`  
     f. `make`  
