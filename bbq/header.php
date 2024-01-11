@@ -5,7 +5,8 @@ session_start();
 // Login handler
 $pass = filter_input(INPUT_POST, 'password');
 if ($pass) {
-	$hashedpass = file_get_contents(ROOT_PATH."bbq/bbq_pass.txt"); // and our stored password
+	// check for stored password. if file doesn't exist, default installation password is "password"
+	$hashedpass = file_get_contents(ROOT_PATH.'bbq/bbq_pass.txt') ?: '$2y$11$xnIxmjMebTojX6Sw8OzQ.O6ncAfBg7k9PytbJ9X93l5acQcw0j1OO';
 		
 	// Verify user password and set $_SESSION
 	if (password_verify($pass, $hashedpass)) {

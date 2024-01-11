@@ -47,10 +47,7 @@ if ($pushData['pushToken'] && $pushData['pushUser'] && $pushData['pushSub']) {
 	
 }
 
-$settings = Database::selectSingle("SELECT alerts, pitLow, pitHigh, foodLow, foodHigh, emailTo, emailEnabled, pushToken, pushUser, push, alertLimit, pushDevice FROM settings", $pdo);
-$_SESSION['pushover_rand'] = bin2hex(openssl_random_pseudo_bytes(20));
-$linkbase = (urlencode($_SERVER['HTTPS'] == "" ? "http://" : "https://")) . $_SERVER["HTTP_HOST"] . reset(explode("?", $_SERVER['REQUEST_URI']));
-$pushlink = "https://pushover.net/subscribe/Alexbbq-u3jxnhm9izvcfn7" . "?success=" . $linkbase . "?rand=" . $_SESSION['pushover_rand'] . "&failure=" . $linkbase;
+$settings = Database::selectSingle("SELECT alerts, pitLow, pitHigh, foodLow, foodHigh, tempType, emailTo, emailEnabled, pushSub, pushToken, pushUser, push, alertLimit, pushDevice FROM settings", $pdo);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -158,7 +155,7 @@ $pushlink = "https://pushover.net/subscribe/Alexbbq-u3jxnhm9izvcfn7" . "?success
 								<fieldset class="bbq d-flex flex-column">
 									<legend>BBQ</legend>
 									<div class="mdc-text-field mdc-text-field--outlined mdc-text-field--with-trailing-icon">
-									  <span class="mdc-text-field__icon">°F</span>
+									  <span class="mdc-text-field__icon">°<?=$settings['tempType'] == 'F' ?: 'C'?></span>
 									  <input class="mdc-text-field__input" name="bbqHigh" type="number" value="<?=$settings['pitHigh']?>" min="0" max="500" step="1" maxlength="3"  inputMode="numeric" pattern="[0-9]*">
 									  <div class="mdc-notched-outline">
 										<div class="mdc-notched-outline__leading"></div>
@@ -170,7 +167,7 @@ $pushlink = "https://pushover.net/subscribe/Alexbbq-u3jxnhm9izvcfn7" . "?success
 									</div>
 					  
 									<div class="mdc-text-field mdc-text-field--outlined mdc-text-field--with-trailing-icon">
-									  <span class="mdc-text-field__icon">°F</span>
+									  <span class="mdc-text-field__icon">°<?=$settings['tempType'] == 'F' ?: 'C'?></span>
 									  <input class="mdc-text-field__input" name="bbqLow" type="number" value="<?=$settings['pitLow']?>" min="0" max="500" step="1" maxlength="3"  inputMode="numeric" pattern="[0-9]*">
 									  <div class="mdc-notched-outline">
 										<div class="mdc-notched-outline__leading"></div>
@@ -185,7 +182,7 @@ $pushlink = "https://pushover.net/subscribe/Alexbbq-u3jxnhm9izvcfn7" . "?success
 								<fieldset class="food d-flex flex-column">
 									<legend>Food</legend>
 								  	<div class="mdc-text-field mdc-text-field--outlined mdc-text-field--with-trailing-icon">
-									  <span class="mdc-text-field__icon">°F</span>
+									  <span class="mdc-text-field__icon">°<?=$settings['tempType'] == 'F' ?: 'C'?></span>
 									  <input class="mdc-text-field__input" name="foodHigh" type="number" value="<?=$settings['foodHigh']?>" min="0" max="500" step="1" maxlength="3" inputMode="numeric" pattern="[0-9]*">
 									  <div class="mdc-notched-outline">
 									    <div class="mdc-notched-outline__leading"></div>
@@ -197,7 +194,7 @@ $pushlink = "https://pushover.net/subscribe/Alexbbq-u3jxnhm9izvcfn7" . "?success
 								    </div>
 							
 								  	<div class="mdc-text-field mdc-text-field--outlined mdc-text-field--with-trailing-icon">
-									  <span class="mdc-text-field__icon">°F</span>
+									  <span class="mdc-text-field__icon">°<?=$settings['tempType'] == 'F' ?: 'C'?></span>
 									  <input class="mdc-text-field__input" name="foodLow" type="number" value="<?=$settings['foodLow']?>" min="0" max="500" step="1" maxlength="3"  inputMode="numeric" pattern="[0-9]*">
 									  <div class="mdc-notched-outline">
 									    <div class="mdc-notched-outline__leading"></div>

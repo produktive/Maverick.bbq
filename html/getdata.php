@@ -12,22 +12,21 @@ if (filter_input(INPUT_POST, 'reqType') == "chart") {
 	$query = "SELECT * FROM readings LIMIT 1";
 	$results = Database::select($query, $pdo);
 	if ($results) {
-		$query = "SELECT probe1, probe2, time FROM readings WHERE cookid={$cookID} ORDER BY time DESC";
-		$results = Database::select($query, $pdo);
+		$results = Database::select("SELECT probe1, probe2, time FROM readings WHERE cookid={$cookID} ORDER BY time DESC", $pdo);
+		$settings = Database::selectSingle("SELECT pitLineColor, foodLineColor, tempType FROM settings", $pdo);
 		$food = array();
 		$bbq = array();
 		$lasttime = $results[0]['time'];
 		foreach ($results as $rows) {
-			$food[] = array("x" => $rows['time'], "y" => $rows['probe1']);
-			$bbq[] = array("x" => $rows['time'], "y" => $rows['probe2']);
+			$food[] = array("x" => $rows['time'], "y" => $settings['tempType'] == 'F' ? $rows['probe1'] : round(($rows['probe1']-32)/1.8));
+			$bbq[] = array("x" => $rows['time'], "y" => $settings['tempType'] == 'F' ? $rows['probe2'] : round(($rows['probe2']-32)/1.8));
 		}
 
 		$results = Database::selectSingle("SELECT start, end, note FROM cooks WHERE id={$cookID}", $pdo);
-		$colors = Database::selectSingle("SELECT pitLineColor, foodLineColor FROM settings", $pdo);
 		
 		$when = strtotime($results['start']);
 		$date = date('F',$when)." ".date('d',$when).", ".date('Y',$when)." at ".date('g',$when).":".date('i a',$when);
-		$chartData = array("date" => $date, "start" => $results['start'], "end" => $results['end'], "duration" => secondsToHumanReadable(strtotime($results['end']) - strtotime($results['start']), 2), "lasttime" => secondsToHumanReadable(time() - strtotime($lasttime), 1), "note" => $results['note'], "food" => $food, "bbq" => $bbq, "activecook" => $activeCook, "bbqColor" => $colors['pitLineColor'], "foodColor" => $colors['foodLineColor']);
+		$chartData = array("date" => $date, "start" => $results['start'], "end" => $results['end'], "duration" => secondsToHumanReadable(strtotime($results['end']) - strtotime($results['start']), 2), "lasttime" => secondsToHumanReadable(time() - strtotime($lasttime), 1), "note" => $results['note'], "food" => $food, "bbq" => $bbq, "activecook" => $activeCook, "bbqColor" => $settings['pitLineColor'], "foodColor" => $settings['foodLineColor'], "tempType" => $settings['tempType']);
 		$data = [];
 		$data[] = $chartData;
 		if ($_SESSION['auth']) {

@@ -8,7 +8,7 @@ use PHPMailer\PHPMailer\Exception;
 try {
 	$DBH = new PDO("sqlite:" . __DIR__ . "/the.db");
 	$DBH->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
-	$STH = $DBH->query("SELECT alerts, pitLow, pitHigh, foodLow, foodHigh, alertLimit, pushToken, pushUser, pushDevice, push, emailEnabled, email, emailTo, smtp FROM settings");
+	$STH = $DBH->query("SELECT alerts, pitLow, pitHigh, foodLow, foodHigh, tempType, alertLimit, pushToken, pushUser, pushDevice, push, emailEnabled, email, emailTo, smtp FROM settings");
 	$settings = $STH->fetch(PDO::FETCH_ASSOC);
 	$emailpassword = file_get_contents(__DIR__ . '/mail_pass.txt');
 	if ($settings['smtp']) {
@@ -33,24 +33,24 @@ try {
 			$STH->bindParam(5, $read);
 			$read = 0;
 		
-			if ($settings['pitLow'] > 0 && $cook['probe2'] < $settings['pitLow']) {
+			if ($settings['pitLow'] > 0 && ($settings['tempType'] == 'F' ? $cook['probe2'] : round(($cook['probe2']-32)/1.8)) < $settings['pitLow']) {
 				// BBQ temp is below pitLow threshold, trigger alert
 				$type = "pitLow";
 				$msg = "Your BBQ is too cold at {$cook['probe2']}! (Min: {$settings['pitLow']})";
 				$STH->execute();
 				
-				if ($settings['emailEnabled'] == 'on' && $settings['email'] !== '' && $emailpassword !== '') {
+				if ($settings['emailEnabled'] == 'on' && $settings['email'] && $emailpassword) {
 					mailAlert($settings['email'], $emailpassword, $msg, $host, $port, $settings['emailTo']);
 				}
 				if ($settings['push'] == 'on') {
 					pushAlert($settings['pushToken'], $settings['pushUser'], $msg);
 				}
-			} elseif ($settings['pitHigh'] > 0 && $cook['probe2'] > $settings['pitHigh']) {
+			} elseif ($settings['pitHigh'] > 0 && ($settings['tempType'] == 'F' ? $cook['probe2'] : round(($cook['probe2']-32)/1.8)) > $settings['pitHigh']) {
 				// BBQ temp is above pitHi threshold, trigger alert
 				$type = "pitHi";
 				$msg = "Your BBQ is too hot at {$cook['probe2']}! (Max: {$settings['pitHigh']})";
 				$STH->execute();
-				if ($settings['emailEnabled'] == 'on' && $settings['email'] !== '' && $emailpassword !== '') {
+				if ($settings['emailEnabled'] == 'on' && $settings['email'] && $emailpassword) {
 					mailAlert($settings['email'], $emailpassword, $msg, $host, $port, $settings['emailTo']);
 				}
 				if ($settings['push'] == 'on') {
@@ -58,23 +58,23 @@ try {
 				}
 			}
 		
-			if ($settings['foodLow'] > 0 && $cook['probe1'] < $settings['foodLow']) {
+			if ($settings['foodLow'] > 0 && ($settings['tempType'] == 'F' ? $cook['probe1'] : round(($cook['probe1']-32)/1.8)) < $settings['foodLow']) {
 				// Food temp is below foodLow threshold, trigger alert
-				$tpe = "foodLow";
+				$type = "foodLow";
 				$msg = "Your food is too cold at {$cook['probe1']}! (Min: {$settings['foodLow']})";
 				$STH->execute();
-				if ($settings['emailEnabled'] == 'on' && $settings['email'] !== '' && $emailpassword !== '') {
+				if ($settings['emailEnabled'] == 'on' && $settings['email'] && $emailpassword) {
 					mailAlert($settings['email'], $emailpassword, $msg, $host, $port, $settings['emailTo']);
 				}
 				if ($settings['push'] == 'on') {
 					pushAlert($settings['pushToken'], $msg);
 				}
-			} elseif ($settings['foodHigh'] > 0 && $cook['probe1'] > $settings['foodHigh']) {
+			} elseif ($settings['foodHigh'] > 0 && ($settings['tempType'] == 'F' ? $cook['probe1'] : round(($cook['probe1']-32)/1.8)) > $settings['foodHigh']) {
 				// BBQ temp is above pitHi threshold, trigger alert
 				$type = "pitHi";
 				$msg = "Your BBQ is too hot at {$cook['probe1']}! (Max: {$settings['pitHigh']})";
 				$STH->execute();
-				if ($settings['emailEnabled'] == 'on' && $settings['email'] !== '' && $emailpassword !== '') {
+				if ($settings['emailEnabled'] == 'on' && $settings['email'] && $emailpassword) {
 					mailAlert($settings['email'], $emailpassword, $msg, $host, $port, $settings['emailTo']);
 				}
 				if ($settings['push'] == 'on') {

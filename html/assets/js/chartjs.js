@@ -108,8 +108,8 @@ function getChartData(cookid) {
 
 					$("#cookTitle").html(chartData[0].date);
 					$("#cookNote").html(chartData[0].note);
-					$("#foodTemp").html(chartData[0].food[0].y + '°F');
-					$("#bbqTemp").html(chartData[0].bbq[0].y + '°F');
+					$("#foodTemp").html(chartData[0].food[0].y + '°' + chartData[0].tempType);
+					$("#bbqTemp").html(chartData[0].bbq[0].y + '°' + chartData[0].tempType);
 				    if ($("#bbqChart").length) {
 				      var lineChartCanvas = $("#bbqChart").get(0).getContext("2d");
 					  
@@ -159,7 +159,7 @@ function getChartData(cookid) {
 								yAxes: [{
 									ticks: {
 										callback: function(value, index, values) {
-											return value + '°F'
+											return value + '°' + chartData[0].tempType
 										}
 									}
 								}]

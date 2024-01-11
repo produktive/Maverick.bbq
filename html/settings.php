@@ -45,12 +45,18 @@ if (filter_input(INPUT_GET, 'pushover_unsubscribed') == "1") {
 	
 } elseif (!empty($_POST)) {
 	
-	if (filter_input(INPUT_POST, 'foodColor') || filter_input(INPUT_POST, 'bbqColor')) {
+	if (filter_input(INPUT_POST, 'foodColor') || filter_input(INPUT_POST, 'bbqColor') || filter_input(INPUT_POST, 'tempType')) {
 		$foodColor = filter_input(INPUT_POST, 'foodColor');
 		$bbqColor = filter_input(INPUT_POST, 'bbqColor');
+		$tempType = filter_input(INPUT_POST, 'tempType');
+		if (strlen($foodColor) == 7 && ctype_xdigit(substr($foodColor, 1)) && strlen($bbqColor) == 7 && ctype_xdigit(substr($bbqColor, 1)) && ($tempType == 'F' || $tempType == 'C')) {
+			$update = Database::update("UPDATE settings SET foodLineColor='{$foodColor}', pitLineColor='{$bbqColor}', tempType='{$tempType}'", $pdo);
+		}
 		
-		if (strlen($foodColor) == 7 && ctype_xdigit(substr($foodColor, 1)) && strlen($bbqColor) == 7 && ctype_xdigit(substr($bbqColor, 1))) {
-			$update = Database::update("UPDATE settings SET foodLineColor='{$foodColor}', pitLineColor='{$bbqColor}'", $pdo);
+	} elseif (filter_input(INPUT_POST, 'tempType')) {
+		
+		if ($tempType == 'F' || $tempType == 'C') {
+			$update = Database::update("UPDATE settings SET tempType='{$tempType}'", $pdo);
 		}
 		
 	// user has pressed the save settings button, update settings
@@ -125,7 +131,7 @@ if (filter_input(INPUT_GET, 'pushover_unsubscribed') == "1") {
 	}
 }
 
-$settings = Database::selectSingle("SELECT email, pushToken, pushUser, pushSub, pitLineColor, foodLineColor, smtp FROM settings", $pdo);
+$settings = Database::selectSingle("SELECT email, pushToken, pushUser, pushSub, pitLineColor, foodLineColor, tempType, smtp FROM settings", $pdo);
 if ($settings['smtp'] && !array_search($settings['smtp'], $smtpArray)) {
 	list($smtp, $port) = explode(':', $settings['smtp'], 2);
 }
@@ -219,20 +225,41 @@ $_SESSION['pushover_rand'] = bin2hex(openssl_random_pseudo_bytes(20));
               <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-6 mdc-layout-grid__cell--span-12-tablet">
 				<form action=".<?=reset(explode("?", $_SERVER['REQUEST_URI']))?>" method="post">
 	                <div class="mdc-card">
-	                  <h6 class="card-title">Chart Color</h6>
-					  <div class="d-flex" style="justify-content:space-around">
+	                  <h6 class="card-title">Chart Options</h6>
+					  <div class="d-flex flex-wrap" style="align-items:center;justify-content:space-around">
+						  
 						  <div class="container">
 						    <input type="color" value="<?=$settings['foodLineColor'] ?: '#008789'?>" name="foodColor" class="color" />
 						    <label for="foodColor" class="mdc-typography--headline4">Food</label>
 						  </div>
+						  
 						  <div class="container">
 						    <input type="color" value="<?=$settings['pitLineColor'] ?: '#291A5B'?>" name="bbqColor" class="color" />
 						    <label for="bbqColor" class="mdc-typography--headline4">BBQ</label>
 						  </div>
+
+							<div class="mdc-select" style="width:fit-content" data-mdc-auto-init="MDCSelect">
+							  <input type="hidden" name="tempType" value="<?=$settings['tempType']?>">
+							  <i class="mdc-select__dropdown-icon"></i>
+							  <div class="mdc-select__selected-text"></div>
+							  <div class="mdc-select__menu mdc-menu-surface" style="width:fit-content">
+								<ul class="mdc-list">
+								  <li class="mdc-list-item<?=$settings['tempType'] == 'F' ? ' mdc-list-item--selected' : ''?>" data-value="F">
+									Fahrenheit
+								  </li>
+								  <li class="mdc-list-item<?=$settings['tempType'] == 'C' ? ' mdc-list-item--selected' : ''?>" data-value="C">
+									Celsius
+								  </li>
+								</ul>
+							  </div>
+							  <span class="mdc-floating-label">Temperature Scale</span>
+							  <div class="mdc-line-ripple"></div>
+							</div>
+
 					  </div>
 					  <div class="text-right" style="margin-top:1em">
 	                    <button type="submit" class="mdc-button mdc-button--raised">
-	                      Save Colors
+	                      Save
 	                    </button>
 					  </div>
                 	</div>
