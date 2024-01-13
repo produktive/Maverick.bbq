@@ -34,4 +34,10 @@ if (filter_input(INPUT_POST, 'p1') == "clicked") {
 			$query->execute();
 		}
 	}
+} elseif (filter_input(INPUT_POST, 'p1') == "edit") {
+	$query = $pdo->prepare('UPDATE cooks SET smoker=:smoker,note=:note WHERE id=:id;');
+	$query->bindValue(':smoker', filter_input(INPUT_POST, 'smoker', FILTER_VALIDATE_INT));
+	$query->bindValue(':note', strip_tags(filter_input(INPUT_POST, 'note'), '<p><a>'));
+	$query->bindValue(':id', filter_input(INPUT_POST, 'cook', FILTER_VALIDATE_INT));
+	$query->execute();
 }

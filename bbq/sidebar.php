@@ -5,9 +5,12 @@ exec("pgrep maverick", $pids);
 if (empty($pids) || $cookID == -1) {
 	$activeCook = false;
 	$endCook = Database::update("UPDATE activecook SET cookid=-1", $pdo);
-	$cookID = Database::selectSingle("SELECT id FROM cooks ORDER BY id DESC LIMIT 1", $pdo);
-	$endTime = Database::selectSingle("SELECT time FROM readings WHERE cookid={$cookID} ORDER BY DESC LIMIT 1", $pdo);
-	$endCook = Database::update("UPDATE cooks SET end={$endTime} WHERE id={$cookID}", $pdo);
+	$cookID = Database::selectSingle("SELECT id, end FROM cooks ORDER BY id DESC LIMIT 1", $pdo);
+	$endTime = Database::selectSingle("SELECT time FROM readings WHERE cookid={$cookID['id']} ORDER BY DESC LIMIT 1", $pdo);
+	if (!$cookID['end']) {
+		$endCook = Database::update("UPDATE cooks SET end={$endTime} WHERE id={$cookID['id']}", $pdo);
+	}
+	$cookID = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT) ?: $cookID['id'];
 } else {
 	$activeCook = true;
 	$startTime = Database::selectSingle("SELECT start FROM cooks WHERE id={$cookID}", $pdo);
@@ -84,23 +87,18 @@ if (empty($pids) || $cookID == -1) {
           				<div class="mdc-select__selected-text"></div>
           				<div class="mdc-select__menu mdc-menu-surface">
             				<ul class="mdc-list">
-											<?php
-											$smokers = Database::select("SELECT * FROM smokers WHERE archived=0 ORDER BY id DESC", $pdo);
-										  foreach ($smokers as $row): ?>
-												<li class="mdc-list-item<?= ($smokers[0]['id'] == $row['id'] ? ' mdc-list-item--selected" aria-selected="true"' : '') ?>" data-value="<?= $row['id'] ?>">
-													<?= htmlspecialchars($row['desc']) ?>
-												</li>
-											<?php endforeach; ?>
+								<?php
+								$smokers = Database::select("SELECT * FROM smokers WHERE archived=0 ORDER BY id DESC", $pdo);
+							  	foreach ($smokers as $row): ?>
+									<li class="mdc-list-item<?= ($smokers[0]['id'] == $row['id'] ? ' mdc-list-item--selected" aria-selected="true' : '') ?>" data-value="<?= $row['id'] ?>">
+										<?= htmlspecialchars($row['desc']) ?>
+									</li>
+								<?php endforeach; ?>
             				</ul>
           				</div>
           				<span class="mdc-floating-label">Choose Smoker</span>
           				<div class="mdc-line-ripple"></div>
         				</div>
-  		  				<!--<label class="mdc-text-field mdc-text-field--filled mdc-text-field--textarea mdc-text-field--no-label">
-  		    				<span class="mdc-text-field__ripple"></span>
-  		      				<textarea id="startCookTextArea" class="mdc-text-field__input" name="note" rows="4" cols="40" aria-label="Cook Description" placeholder="Cook description"></textarea>
-  		    				<span class="mdc-line-ripple"></span>
-  		  				</label>-->
 						<div id="startCookTextArea" style="max-width:100%;width:560px;height:12em;font-size:1rem;font-family:inherit"></div>
           		</div>
 	          	<div class="mdc-dialog__actions">

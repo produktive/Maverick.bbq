@@ -157,7 +157,16 @@ if ($times) {
                     <h4 id="cookTitle" class="card-title mb-0"><!-- Cook Time & Date --></h4>
                     <div>
                         <i id="refreshChart" class="material-icons refresh-icon" id>refresh</i>
-                        <i class="material-icons options-icon ml-2">more_vert</i>
+						<div class="menu-button-container" style="display:inline-block">
+                          <i class="material-icons options-icon ml-2 mdc-menu-button">more_vert</i>
+                          <div class="mdc-menu mdc-menu-surface" tabindex="-1" id="demo-menu">
+                            <ul class="mdc-list" role="menu" aria-hidden="true" aria-orientation="vertical">
+                              <li id="editCook" class="mdc-list-item" role="menuitem">
+                                <h6 class="item-subject font-weight-normal">Edit</h6>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
                     </div>
                   </div>
                   <div class="d-block d-sm-flex justify-content-between align-items-center">
@@ -224,16 +233,62 @@ if ($times) {
   <script src="assets/vendors/chartjs/chartjs-adapter-date-fns.bundle.min.js"></script>
   <!-- End plugin js for this page-->
   <!-- inject:js -->
-  <script src="assets/js/material.js"></script>
-  <script src="assets/js/misc.js"></script>
-  <?=$_SESSION['auth'] ? '<script src="assets/js/quill.min.js"></script>' : ''?>
+  <?php if ($_SESSION['auth']): ?>
+	    <!-- Edit cook popup dialog -->
+	    <div id="editCookDialog" class="mdc-dialog" data-mdc-auto-init="MDCDialog">
+	      <div class="mdc-dialog__container">
+					<form id="editCookForm">
+	        	<div class="mdc-dialog__surface" role="alertdialog" aria-modal="true" aria-labelledby="Confirm" aria-describedby="Edit Cook">
+          		<div class="mdc-dialog__content" id="editcook-dialog-content">
+  		  				<h5 id="my-dialog-title">Edit Cook</h5>
+        				<div class="mdc-select mdc-select--required" style="width:100%" data-mdc-auto-init="MDCSelect">
+          				<input type="hidden" id="editSmoker" name="smoker">
+          				<i class="mdc-select__dropdown-icon"></i>
+          				<div class="mdc-select__selected-text"></div>
+          				<div class="mdc-select__menu mdc-menu-surface">
+            				<ul class="mdc-list editList">
+								<?php
+								$cook = Database::selectSingle("SELECT * FROM cooks WHERE id={$cookID}", $pdo);
+							  	foreach ($smokers as $row): ?>
+									<li class="mdc-list-item<?= ($cook['smoker'] == $row['id'] ? ' mdc-list-item--selected" aria-selected="true' : '') ?>" data-value="<?= $row['id'] ?>">
+										<?= htmlspecialchars($row['desc']) ?>
+									</li>
+								<?php endforeach; ?>
+            				</ul>
+          				</div>
+          				<span class="mdc-floating-label">Choose Smoker</span>
+          				<div class="mdc-line-ripple"></div>
+        				</div>
+						<input type="hidden" name="p1" value="edit">
+						<input type="hidden" name="cook" value="<?=$cookID?>">
+						</form>
+						<div id="editCookTextArea" style="max-width:100%;width:560px;height:12em;font-size:1rem;font-family:inherit"></div>
+          		</div>
+	          	<div class="mdc-dialog__actions">
+	            	<button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="cancel">
+	              	<div class="mdc-button__ripple"></div>
+	              	<span class="mdc-button__label">Cancel</span>
+	            	</button>
+	            	<button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="save">
+	              	<div class="mdc-button__ripple"></div>
+	              	<span class="mdc-button__label">Save</span>
+	            	</button>
+	          	</div>
+	        	</div>
+	      </div>
+	      <div class="mdc-dialog__scrim"></div>
+	    </div>
+	    <!-- end dialog -->
+	    <script src="assets/js/material.js"></script>
+	    <script src="assets/js/misc.js"></script>
+  		<script src="assets/js/quill.min.js"></script>
+  <?php endif; ?>
   <!-- endinject -->
   <!-- Custom js for this page-->
-  <script src="assets/js/dashboard.js"></script>
   <?php
-	  if (filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT)) {
-	  	$cookID = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
-	  }
+  if (filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT)) {
+  	$cookID = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+  }
   ?>
   <script src="assets/js/chartjs.js?cookid=<?= $cookID ?>" id="chartjs"></script>
 	<script>
@@ -252,6 +307,25 @@ if ($times) {
 		var tooltip = quill.theme.tooltip;
 		var input = tooltip.root.querySelector("input[data-link]");
 		input.dataset.link = 'https://example.com';
+		
+		var quillEdit = new Quill('#editCookTextArea', {
+		  bounds: '#editCookTextArea',
+		  modules: {
+		    toolbar: [
+		      ['link'],
+		    ]
+		  },
+		  placeholder: 'Cook description',
+		  theme: 'bubble'  // or 'bubble'
+		});
+		
+		var tooltip2 = quillEdit.theme.tooltip;
+		var input2 = tooltip2.root.querySelector("input[data-link]");
+		input2.dataset.link = 'https://example.com';
+		
+		const delta = quillEdit.clipboard.convert(`<?=$cook['note']?>`);
+		quillEdit.setContents(delta, 'silent');
+		
 		<?php endif; ?>
 		$(function () {
 			getChartData();

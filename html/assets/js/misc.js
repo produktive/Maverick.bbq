@@ -136,6 +136,28 @@
 		$("#readAllNotifications").click(function(e) {
 			location.href = "./notifications";
 		});
+		
+		$("#editCookDialog").on("MDCDialog:closing", function(event) {
+			if (event.detail.action == "save") {
+				let data = $("#editCookForm").serializeArray();
+				data.push({name: "note", value: quillEdit.root.innerHTML});
+				$.ajax({
+					url: 'togglecook.php',
+					type: 'POST',
+					data: $.param(data),
+					success: function(data) {
+						$("#cookNote").html(quillEdit.root.innerHTML);
+					},
+					error: function (request, status, error) {
+						toggleCook.css('pointer-events', 'auto');
+						toggleCook.css('opacity', '1');
+						alert(request.responseText);
+					}
+				});
+			} else {
+				quillEdit.setContents(delta, 'silent');
+			}
+		});
 
   });
 })(jQuery);

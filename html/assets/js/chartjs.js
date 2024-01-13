@@ -443,3 +443,7 @@ $(".duration-list > li").on("click", function() {
 $("#refreshChart").click(function() {
 	getChartData(null, $(".duration-list > li[style*='display: none;']").index());
 });
+
+$("#editCook").click(function() {
+	document.getElementById('editCookDialog').MDCDialog.open();
+});

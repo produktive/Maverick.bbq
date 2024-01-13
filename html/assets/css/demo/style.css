@@ -54,6 +54,10 @@ a, .ql-editor a {
 	font-size: inherit !important;
 }
 
+#cookNote p {
+	font-size: 1rem !important;
+}
+
 .mdc-button {
   font-family: Roboto, sans-serif;
   -moz-osx-font-smoothing: grayscale;
