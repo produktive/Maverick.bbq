@@ -157,16 +157,18 @@ if ($times) {
                     <h4 id="cookTitle" class="card-title mb-0"><!-- Cook Time & Date --></h4>
                     <div>
                         <i id="refreshChart" class="material-icons refresh-icon" id>refresh</i>
-						<div class="menu-button-container" style="display:inline-block">
-                          <i class="material-icons options-icon ml-2 mdc-menu-button">more_vert</i>
-                          <div class="mdc-menu mdc-menu-surface" tabindex="-1" id="demo-menu">
-                            <ul class="mdc-list" role="menu" aria-hidden="true" aria-orientation="vertical">
-                              <li id="editCook" class="mdc-list-item" role="menuitem">
-                                <h6 class="item-subject font-weight-normal">Edit</h6>
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
+						<?php if ($_SESSION['auth']): ?>
+							<div class="menu-button-container" style="display:inline-block">
+	                          <i class="material-icons options-icon ml-2 mdc-menu-button">more_vert</i>
+	                          <div class="mdc-menu mdc-menu-surface" tabindex="-1" id="demo-menu">
+	                            <ul class="mdc-list" role="menu" aria-hidden="true" aria-orientation="vertical">
+	                              <li id="editCook" class="mdc-list-item" role="menuitem">
+	                                <h6 class="item-subject font-weight-normal">Edit</h6>
+	                              </li>
+	                            </ul>
+	                          </div>
+	                        </div>
+						<?php endif; ?>
                     </div>
                   </div>
                   <div class="d-block d-sm-flex justify-content-between align-items-center">
@@ -233,6 +235,8 @@ if ($times) {
   <script src="assets/vendors/chartjs/chartjs-adapter-date-fns.bundle.min.js"></script>
   <!-- End plugin js for this page-->
   <!-- inject:js -->
+  <script src="assets/js/material.js"></script>
+  <script src="assets/js/misc.js"></script>
   <?php if ($_SESSION['auth']): ?>
 	    <!-- Edit cook popup dialog -->
 	    <div id="editCookDialog" class="mdc-dialog" data-mdc-auto-init="MDCDialog">
@@ -279,8 +283,6 @@ if ($times) {
 	      <div class="mdc-dialog__scrim"></div>
 	    </div>
 	    <!-- end dialog -->
-	    <script src="assets/js/material.js"></script>
-	    <script src="assets/js/misc.js"></script>
   		<script src="assets/js/quill.min.js"></script>
   <?php endif; ?>
   <!-- endinject -->
