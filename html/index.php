@@ -235,8 +235,6 @@ if ($times) {
   <script src="assets/vendors/chartjs/chartjs-adapter-date-fns.bundle.min.js"></script>
   <!-- End plugin js for this page-->
   <!-- inject:js -->
-  <script src="assets/js/material.js"></script>
-  <script src="assets/js/misc.js"></script>
   <?php if ($_SESSION['auth']): ?>
 	    <!-- Edit cook popup dialog -->
 	    <div id="editCookDialog" class="mdc-dialog" data-mdc-auto-init="MDCDialog">
@@ -285,6 +283,8 @@ if ($times) {
 	    <!-- end dialog -->
   		<script src="assets/js/quill.min.js"></script>
   <?php endif; ?>
+  <script src="assets/js/material.js"></script>
+  <script src="assets/js/misc.js"></script>
   <!-- endinject -->
   <!-- Custom js for this page-->
   <?php

@@ -54,8 +54,9 @@ a, .ql-editor a {
 	font-size: inherit !important;
 }
 
-#cookNote p {
+#cookNote, #cookNote p {
 	font-size: 1rem !important;
+	margin: 0 !important;
 }
 
 .mdc-button {
