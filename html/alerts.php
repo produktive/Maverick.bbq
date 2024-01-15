@@ -155,7 +155,7 @@ $settings = Database::selectSingle("SELECT alerts, pitLow, pitHigh, foodLow, foo
 								<fieldset class="bbq d-flex flex-column">
 									<legend>BBQ</legend>
 									<div class="mdc-text-field mdc-text-field--outlined mdc-text-field--with-trailing-icon">
-									  <span class="mdc-text-field__icon">°<?=$settings['tempType'] == 'F' ?: 'C'?></span>
+									  <span class="mdc-text-field__icon">°<?=$settings['tempType'] == 'F' ? 'F' : 'C'?></span>
 									  <input class="mdc-text-field__input" name="bbqHigh" type="number" value="<?=$settings['pitHigh']?>" min="0" max="500" step="1" maxlength="3"  inputMode="numeric" pattern="[0-9]*">
 									  <div class="mdc-notched-outline">
 										<div class="mdc-notched-outline__leading"></div>
@@ -167,7 +167,7 @@ $settings = Database::selectSingle("SELECT alerts, pitLow, pitHigh, foodLow, foo
 									</div>
 					  
 									<div class="mdc-text-field mdc-text-field--outlined mdc-text-field--with-trailing-icon">
-									  <span class="mdc-text-field__icon">°<?=$settings['tempType'] == 'F' ?: 'C'?></span>
+									  <span class="mdc-text-field__icon">°<?=$settings['tempType'] == 'F' ? 'F' : 'C'?></span>
 									  <input class="mdc-text-field__input" name="bbqLow" type="number" value="<?=$settings['pitLow']?>" min="0" max="500" step="1" maxlength="3"  inputMode="numeric" pattern="[0-9]*">
 									  <div class="mdc-notched-outline">
 										<div class="mdc-notched-outline__leading"></div>
@@ -182,7 +182,7 @@ $settings = Database::selectSingle("SELECT alerts, pitLow, pitHigh, foodLow, foo
 								<fieldset class="food d-flex flex-column">
 									<legend>Food</legend>
 								  	<div class="mdc-text-field mdc-text-field--outlined mdc-text-field--with-trailing-icon">
-									  <span class="mdc-text-field__icon">°<?=$settings['tempType'] == 'F' ?: 'C'?></span>
+									  <span class="mdc-text-field__icon">°<?=$settings['tempType'] == 'F' ? 'F' : 'C'?></span>
 									  <input class="mdc-text-field__input" name="foodHigh" type="number" value="<?=$settings['foodHigh']?>" min="0" max="500" step="1" maxlength="3" inputMode="numeric" pattern="[0-9]*">
 									  <div class="mdc-notched-outline">
 									    <div class="mdc-notched-outline__leading"></div>
@@ -194,7 +194,7 @@ $settings = Database::selectSingle("SELECT alerts, pitLow, pitHigh, foodLow, foo
 								    </div>
 							
 								  	<div class="mdc-text-field mdc-text-field--outlined mdc-text-field--with-trailing-icon">
-									  <span class="mdc-text-field__icon">°<?=$settings['tempType'] == 'F' ?: 'C'?></span>
+									  <span class="mdc-text-field__icon">°<?=$settings['tempType'] == 'F' ? 'F' : 'C'?></span>
 									  <input class="mdc-text-field__input" name="foodLow" type="number" value="<?=$settings['foodLow']?>" min="0" max="500" step="1" maxlength="3"  inputMode="numeric" pattern="[0-9]*">
 									  <div class="mdc-notched-outline">
 									    <div class="mdc-notched-outline__leading"></div>
