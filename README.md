@@ -42,7 +42,7 @@ Install steps as of January 7, 2024:
     f. `make`  
     g. `sudo make install`
 4.  `sudo apt install nginx libsqlite3-dev sqlite3 php-fpm php-curl`
-5.  Configure for nginx: either paste from `bbq/maverick.bbq` or simply: 
+5.  Configure for nginx: either paste from `bbq/maverick.bbq` or simply:  
 `sudo cp ~/Maverick.bbq/bbq/maverick.bbq /etc/nginx/sites-available/default`
 6.  Copy maverick html files to nginx web root  
     a. `cd`  
