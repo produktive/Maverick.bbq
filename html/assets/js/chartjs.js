@@ -70,6 +70,20 @@ function getChartData(cookid) {
 						$("#toggleCook").css('background-color', '#00B076');
 						$("#counterDiv").addClass("d-none");
 						$("#navDivider").addClass("d-none");
+						$.ajax({
+							url: "getdata.php",
+							data: {'reqType': 'stats'},
+							type: "POST",
+							async: true,
+							dataType: "json",
+							success: function(data) {
+								$(".stats:eq(0) h4").html(data['cooks'] || '0');
+								$(".stats:eq(1) h4").html(data['time'] || '0');
+								$(".stats:eq(2) h4").html(data['readings'] || '0');
+								$(".stats:eq(3) h4").html(data['average'] || '0');
+							}
+						});
+						
 						$(".mdc-layout-grid__inner").first().prepend($(".stats:eq(0)"), $(".stats:eq(1)"), $(".stats:eq(2)"), $(".stats:eq(3)"));
 						$(".stats").removeClass("d-none");
 						if (typeof window.counterInterval != "undefined") {

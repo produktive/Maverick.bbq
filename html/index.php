@@ -16,7 +16,7 @@ if ($times) {
 	}
 	$stats['time'] = secondstoHumanReadable($totalTime, 3);
 	$stats['cooks'] = count($times);
-	$stats['readings'] = Database::selectSingle("SELECT count(time) FROM readings", $pdo);
+	$stats['readings'] = number_format(Database::selectSingle("SELECT count(time) FROM readings", $pdo));
 	$stats['average'] = secondstoHumanReadable($totalTime/$stats['cooks'], 2);
 	$chartColors = Database::selectSingle("SELECT pitLineColor, foodLineColor FROM settings", $pdo);
 }
@@ -93,7 +93,7 @@ if ($times) {
                 <div class="mdc-card info-card info-card--primary">
                   <div class="card-inner">
                     <h5 class="card-title">Temperature Readings</h5>
-                    <h4 class="font-weight-light pb-2"><?= number_format($stats['readings']) ?: '0' ?></h4>
+                    <h4 class="font-weight-light pb-2"><?= $stats['readings'] ?: '0' ?></h4>
                     <div class="card-icon-wrapper">
                       <i class="material-icons">trending_up</i>
                     </div>

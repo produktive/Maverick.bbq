@@ -48,6 +48,9 @@ if (filter_input(INPUT_POST, 'reqType') == "chart") {
 			$totalTime += strtotime($row['end']) - strtotime($row['start']);
 		}
 		$stats['time'] = secondsToHumanReadable($totalTime, 3);
+		$stats['cooks'] = count($times);
+		$stats['readings'] = number_format(Database::selectSingle("SELECT count(time) FROM readings", $pdo));
+		$stats['average'] = secondstoHumanReadable($totalTime/$stats['cooks'], 2);
 	}
 	echo json_encode($stats);
 	
